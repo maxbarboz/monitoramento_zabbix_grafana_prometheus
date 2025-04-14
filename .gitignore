@@ -1,0 +1,3 @@
+# Ignorar dados persistentes do Zabbix e MySQL
+mysql_data/
+zabbix_server_data/
