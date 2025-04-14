@@ -17,7 +17,7 @@ Utilizando container, podemos ter alguns erros a respeito do IP que o server uti
 
 Para resolver, é necessário alterar o IP no client web (Zabbix Web), seguir os passos a seguir:
 
-![alt text](/img_readme/image.png)
+![alt text](/img/image.png)
 
 ```shell
 docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' zabbix-agent
