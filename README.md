@@ -6,3 +6,13 @@
 - O Zabbix Agent coleta dados dos hosts monitorados.
 
 Cada serviço é interdependente e a comunicação entre eles é feita por variáveis de ambiente, como DB_SERVER_HOST e ZBX_SERVER_HOST.
+
+<<<<< INFORMAÇÕES IMPORTANTES >>>>>
+
+Utilizando container, podemos ter alguns erros a respeito do IP que o server utiliza no container, com isso podemos ter erros como:
+
+- Get value from agent failed: cannot connect to [[127.0.0.1]:10050]: [111] Connection refused
+
+Para resolver, é necessário alterar o IP no client web (Zabbix Web), seguir os passos a seguir:
+
+![alt text](/img_readme/image.png)
