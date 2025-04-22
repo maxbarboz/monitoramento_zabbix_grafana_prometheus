@@ -5,10 +5,10 @@ services:
     image: mysql:8.0
     container_name: zabbix-mysql
     environment:
-      MYSQL_ROOT_PASSWORD: zabbix
-      MYSQL_DATABASE: zabbix
-      MYSQL_USER: zabbix
-      MYSQL_PASSWORD: zabbix
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - ./mysql_data:/var/lib/mysql
     restart: unless-stopped
@@ -28,7 +28,7 @@ services:
         condition: service_healthy
     environment:
       DB_SERVER_HOST: mysql
-      MYSQL_ROOT_PASSWORD: zabbix
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
       - "10051:10051"
     volumes:
@@ -38,20 +38,22 @@ services:
       - zabbix_network
 
   zabbix-web:
-    image: zabbix/zabbix-web-nginx-mysql:alpine-6.4-latest
+    image: zabbix/zabbix-web-apache-mysql:alpine-6.4-latest
     container_name: zabbix-web
     depends_on:
       zabbix-server:
         condition: service_started
     environment:
       DB_SERVER_HOST: mysql
-      MYSQL_DATABASE: zabbix
-      MYSQL_USER: zabbix
-      MYSQL_PASSWORD: zabbix
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       ZBX_SERVER_HOST: zabbix-server
       PHP_TZ: America/Sao_Paulo
     ports:
       - "8080:8080"
+    volumes:
+      - ./apache_status.conf:/etc/apache2/conf.d/status.conf      
     restart: unless-stopped
     networks:
       - zabbix_network
@@ -66,6 +68,41 @@ services:
       ZBX_SERVER_HOST: zabbix-server
       ZBX_HOSTNAME: zabbix-agent
       ZBX_LISTENIP: 0.0.0.0
+    restart: unless-stopped
+    networks:
+      - zabbix_network
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3333:3000"
+    volumes:
+      - ./grafana_data:/var/lib/grafana
+    restart: unless-stopped
+    networks:
+      - zabbix_network
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    restart: unless-stopped
+    networks:
+      - zabbix_network
+
+  apache-exporter:
+    image: bitnami/apache-exporter:latest
+    container_name: apache-exporter
+    environment:
+      SCRAPE_URI: http://zabbix-web:8080/server-status?auto
+    ports:
+      - "9117:9117"
+    depends_on:
+      - zabbix-web
     restart: unless-stopped
     networks:
       - zabbix_network
