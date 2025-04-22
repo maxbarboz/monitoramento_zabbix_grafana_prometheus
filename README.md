@@ -83,7 +83,7 @@ Este projeto usa Docker Compose para configurar uma stack de monitoramento compo
 
 ## Configuração do `.env`
 
-O arquivo `.env` é usado para armazenar variáveis de ambiente sensíveis e configurar os valores de acesso aos serviços no Docker Compose. Ao usar variáveis de ambiente, você pode facilmente configurar e reutilizar seu projeto sem precisar editar diretamente o `docker-compose.yml`.
+Antes de executar o Docker Compose, é necessário criar um arquivo `.env` para configurar as variáveis de ambiente sensíveis. Este arquivo deve ser colocado no diretório onde o `docker-compose.yml` está localizado.
 
 ### Exemplo de `.env`
 
@@ -94,12 +94,7 @@ MYSQL_USER=zabbix_user
 MYSQL_PASSWORD=zabbix_password
 ```
 
-### Como Funciona
-
-- As variáveis definidas no arquivo `.env` são referenciadas no arquivo `docker-compose.yml` com a sintaxe `${VAR_NAME}`.
-- Isso permite que você mantenha valores sensíveis fora do arquivo de configuração principal, facilitando a troca de credenciais sem alterar o código do serviço.
-  
-Certifique-se de **nunca** incluir o arquivo `.env` em um repositório público. Para isso, adicione o `.env` ao seu `.gitignore`.
+Esse arquivo será usado para preencher automaticamente as variáveis no `docker-compose.yml`, garantindo que os dados sensíveis não fiquem expostos diretamente no arquivo de configuração.
 
 ## Instruções para Execução
 
