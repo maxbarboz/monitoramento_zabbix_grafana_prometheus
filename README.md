@@ -1,4 +1,4 @@
-# Zabbix + Grafana + Prometheus Docker Compose
+# Zabbix + Grafana + Prometheus
 
 Este projeto usa Docker Compose para configurar uma stack de monitoramento composta por **Zabbix**, **Grafana**, **Prometheus**, e outros componentes. A seguir está a descrição de cada serviço, como configurá-los, e a explicação do arquivo `.env`.
 
